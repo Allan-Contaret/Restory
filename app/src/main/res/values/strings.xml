@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Restory</string>
     <string name="pageGarde">Page de garde</string>
+    <string name="entrer">Entrer</string>
 </resources>
