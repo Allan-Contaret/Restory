@@ -25,6 +25,9 @@ public class ListCardActivity extends AppCompatActivity {
         persons.add(new Person("Emma Wilson", "23 years old", R.drawable.drole));
         persons.add(new Person("Lavery Maiss", "25 years old", R.drawable.drole));
         persons.add(new Person("Lillie Watts", "35 years old", R.drawable.drole));
+        persons.add(new Person("Lillie Watts", "35 years old", R.drawable.drole));
+        persons.add(new Person("Lillie Watts", "35 years old", R.drawable.drole));
+        persons.add(new Person("Lillie Watts", "35 years old", R.drawable.drole));
 
         RVAdapter adapter = new RVAdapter(persons);
         rv.setAdapter(adapter);
