@@ -2,6 +2,6 @@
     <string name="app_name">Restory</string>
     <string name="pageGarde">Page de garde</string>
     <string name="entrer">Entrer</string>
-    <string name="title_activity_welcome">WelcomeActivity</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_welcome">Bienvenue</string>
+    <string name="title_activity_maps">Carte</string>
 </resources>
