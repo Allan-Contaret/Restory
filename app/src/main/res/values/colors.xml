@@ -2,6 +2,10 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#ff4081</color>
     <color name="boutonEntrer">#a3a3a3</color>
+    <color name="yolo">#8399cc00</color>
+    <color name="yolo1">#58ff8800</color>
+    <color name="yolo_white">#4fffffff</color>
+    <color name="mycolor">#ffcc80</color>
 </resources>

@@ -19,7 +19,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent intent = new Intent(WelcomeActivity.this, MapsActivity.class);
+                Intent intent = new Intent(WelcomeActivity.this, ListCardActivity.class);
                 startActivity(intent);
             }
         });

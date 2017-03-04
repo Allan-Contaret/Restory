@@ -4,4 +4,6 @@
     <string name="entrer">Entrer</string>
     <string name="title_activity_welcome">Bienvenue</string>
     <string name="title_activity_maps">Carte</string>
+    <string name="test">test</string>
+    <string name="attr">image</string>
 </resources>
