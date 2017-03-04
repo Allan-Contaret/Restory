@@ -1,10 +1,14 @@
 package com.example.allancontaret.restory;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,7 +31,7 @@ public class ListCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_card);
 
         // view formant la liste de cards
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setHasFixedSize(true);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -41,29 +45,43 @@ public class ListCardActivity extends AppCompatActivity {
         final RVAdapter adapter = new RVAdapter(restaurants);
         rv.setAdapter(adapter);
 
-
-
-        /**** Scroll infini avec pages ******/
-        // Retain an instance so that you can call `resetState()` for fresh searches
-        scrollListener = new EndlessRecyclerViewScrollListener(llm) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to the bottom of the list
-                //loadNextDataFromApi(page);
-                getRestaurants(restaurants, adapter, (page+1));
-                Log.i("page", ""+(page+1));
-            }
-        };
-        // Adds the scroll listener to RecyclerView
-        rv.addOnScrollListener(scrollListener);
-        getRestaurants(restaurants, adapter, 1);
-
+        // on verifie si il y a une connexion internet
+        if (isNetworkAvailable()) {
+            /**** Scroll infini avec pages ******/
+            scrollListener = new EndlessRecyclerViewScrollListener(llm) {
+                @Override
+                public void onLoadMore(final int page, int totalItemsCount, RecyclerView view) {
+                    // ouverture d'un thread
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getRestaurants(restaurants, adapter, (page+1));
+                            Log.i("page", ""+(page+1));
+                        }
+                    }).start();
+                }
+            };
+            rv.addOnScrollListener(scrollListener);
+            getRestaurants(restaurants, adapter, 1);
+        } else {
+            Toast.makeText(getApplicationContext(), "Pas de connexion internet !", Toast.LENGTH_LONG).show();
+            /*Intent intent = new Intent(main.this, no_connection.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);*/
+        }
 
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     private void getRestaurants(final List<Restaurant> restaurants, final RVAdapter adapter, int page) {
-        // recupération des restos via l'url - Nous utilisons Volley !!
+
+        // recupération des restos via l'url - Nous utilisons Volley pour les requêtes !!
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url = "http://api.gregoirejoncour.xyz/restaurants/"+page+"?key=da39a3ee5e6b4b0d3255bfef95601890afd80709";
 
@@ -89,6 +107,16 @@ public class ListCardActivity extends AppCompatActivity {
                             restaurants.add(restaurant);
                         }
                         adapter.notifyDataSetChanged();
+
+                        //page traitement
+                        /*SONObject responsePage = response.getJSONObject("page");
+                        if (response.getJSONObject("page").optInt("next", 0)==0) {
+                            Toast.makeText(getApplicationContext(), "Dernière page !", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Page n°"+responsePage.getInt("current")+"/"+responsePage.getInt("total"), Toast.LENGTH_SHORT);
+                            toast.setGravity(0, 0, 0);
+                            toast.show();
+                        }*/
 
                     } catch (JSONException e) {
                         e.printStackTrace();
