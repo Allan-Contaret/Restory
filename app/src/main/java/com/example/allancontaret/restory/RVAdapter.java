@@ -13,18 +13,17 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
+public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHolder>{
     List<Restaurant> restaurants;
 
     RVAdapter(List<Restaurant> restaurants){
         this.restaurants = restaurants;
     }
     @Override
-    public void onBindViewHolder(PersonViewHolder holder, int position) {
+    public void onBindViewHolder(RestaurantViewHolder holder, int position) {
         Log.i("restaurantLoaderName", restaurants.get(position).name);
         //holder.restaurantPhoto.setImageResource(restaurants.get(position).img);
         holder.restaurantName.setText(restaurants.get(position).name);
-        holder.restaurantAge.setText(restaurants.get(position).address);
         //restaurantPhoto should be ImageView or your CustomImageView
         // vive Glide !!!
         Glide.with(holder.restaurantPhoto.getContext())
@@ -39,9 +38,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
     }
 
     @Override
-    public PersonViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.test, viewGroup, false);
-        PersonViewHolder pvh = new PersonViewHolder(v);
+    public RestaurantViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.restaurant_card, viewGroup, false);
+        RestaurantViewHolder pvh = new RestaurantViewHolder(v);
         return pvh;
     }
 
@@ -50,19 +49,17 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    static class PersonViewHolder extends RecyclerView.ViewHolder {
+    static class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
         CardView cv;
         TextView restaurantName;
-        TextView restaurantAge;
         ImageView restaurantPhoto;
 
-        PersonViewHolder(View itemView) {
+        RestaurantViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
-            restaurantName = (TextView)itemView.findViewById(R.id.person_name);
-            restaurantAge = (TextView)itemView.findViewById(R.id.person_age);
-            restaurantPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
+            restaurantName = (TextView)itemView.findViewById(R.id.restaurant_name);
+            restaurantPhoto = (ImageView)itemView.findViewById(R.id.restaurant_photo);
         }
 
     }
