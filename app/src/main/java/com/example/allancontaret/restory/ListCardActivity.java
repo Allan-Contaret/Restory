@@ -51,20 +51,21 @@ public class ListCardActivity extends AppCompatActivity {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 //loadNextDataFromApi(page);
-                Log.i("page", ""+page);
+                getRestaurants(restaurants, adapter, (page+1));
+                Log.i("page", ""+(page+1));
             }
         };
         // Adds the scroll listener to RecyclerView
         rv.addOnScrollListener(scrollListener);
-        getRestaurants(restaurants, adapter);
+        getRestaurants(restaurants, adapter, 1);
 
 
     }
 
-    private void getRestaurants(final List<Restaurant> restaurants, final RVAdapter adapter) {
+    private void getRestaurants(final List<Restaurant> restaurants, final RVAdapter adapter, int page) {
         // recupération des restos via l'url - Nous utilisons Volley !!
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = "http://api.gregoirejoncour.xyz/restaurant";
+        String url = "http://api.gregoirejoncour.xyz/restaurants/"+page+"?key=da39a3ee5e6b4b0d3255bfef95601890afd80709";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
