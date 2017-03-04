@@ -4,11 +4,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListCardActivity extends AppCompatActivity {
+    private EndlessRecyclerViewScrollListener scrollListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,18 +41,41 @@ public class ListCardActivity extends AppCompatActivity {
         final RVAdapter adapter = new RVAdapter(restaurants);
         rv.setAdapter(adapter);
 
+
+
+        /**** Scroll infini avec pages ******/
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(llm) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                //loadNextDataFromApi(page);
+                Log.i("page", ""+page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rv.addOnScrollListener(scrollListener);
+        getRestaurants(restaurants, adapter);
+
+
+    }
+
+    private void getRestaurants(final List<Restaurant> restaurants, final RVAdapter adapter) {
         // recupération des restos via l'url - Nous utilisons Volley !!
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = "http://api.gregoirejoncour.xyz/restaurant-clone";
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+        String url = "http://api.gregoirejoncour.xyz/restaurant";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONArray response) {
-                try {
-                    if (response.length() > 0) {
-                        restaurants.clear();
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject restaurantObject = response.getJSONObject(i);
+            public void onResponse(JSONObject response) {
+                if (response.length() > 0) {
+                    try {
+                        JSONArray responseRestaurants = response.getJSONArray("restaurants");
+                        for (int i = 0; i < responseRestaurants.length(); i++) {
+                            JSONObject restaurantObject = responseRestaurants.getJSONObject(i);
                             JSONObject location = restaurantObject.getJSONObject("location");
+                            Log.i("restaurantData", restaurantObject.toString());
 
                             Restaurant restaurant = new Restaurant();
                             restaurant.name = restaurantObject.getString("name");
@@ -63,9 +88,11 @@ public class ListCardActivity extends AppCompatActivity {
                             restaurants.add(restaurant);
                         }
                         adapter.notifyDataSetChanged();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
                 }
             }
         }, new Response.ErrorListener() {
@@ -73,7 +100,7 @@ public class ListCardActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        });
-        requestQueue.add(jsonArrayRequest);
+        } );
+        requestQueue.add(jsonObjectRequest);
     }
 }

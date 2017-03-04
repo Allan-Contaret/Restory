@@ -21,7 +21,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
     }
     @Override
     public void onBindViewHolder(PersonViewHolder holder, int position) {
-        Log.i("name", restaurants.get(position).name);
+        Log.i("restaurantLoaderName", restaurants.get(position).name);
         //holder.restaurantPhoto.setImageResource(restaurants.get(position).img);
         holder.restaurantName.setText(restaurants.get(position).name);
         holder.restaurantAge.setText(restaurants.get(position).address);
