@@ -8,4 +8,8 @@
     <color name="yolo1">#58ff8800</color>
     <color name="yolo_white">#4fffffff</color>
     <color name="mycolor">#ffcc80</color>
+
+    <color name="refresh_progress_1">#ce7b00</color>
+    <color name="refresh_progress_2">#ffcc80</color>
+    <color name="refresh_progress_3">#ffe854</color>
 </resources>

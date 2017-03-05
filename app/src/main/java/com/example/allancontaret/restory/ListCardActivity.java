@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,17 +25,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListCardActivity extends AppCompatActivity {
+    public static final String NO_CO_TEXT = "Pas de connexion internet !";
     private EndlessRecyclerViewScrollListener scrollListener;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_card);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.refresh_progress_1,
+                R.color.refresh_progress_2,
+                R.color.refresh_progress_3);
 
         // view formant la liste de cards
         final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setHasFixedSize(true);
 
-        LinearLayoutManager llm = new LinearLayoutManager(this);
+        final LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
 
         // la liste des restos
@@ -45,30 +54,51 @@ public class ListCardActivity extends AppCompatActivity {
         final RVAdapter adapter = new RVAdapter(restaurants);
         rv.setAdapter(adapter);
 
-        // on verifie si il y a une connexion internet
-        if (isNetworkAvailable()) {
-            /**** Scroll infini avec pages ******/
-            scrollListener = new EndlessRecyclerViewScrollListener(llm) {
-                @Override
-                public void onLoadMore(final int page, int totalItemsCount, RecyclerView view) {
+        /**** Scroll infini avec pages ******/
+        scrollListener = new EndlessRecyclerViewScrollListener(llm) {
+            @Override
+            public void onLoadMore(final int page, int totalItemsCount, RecyclerView view) {
+                if (isNetworkAvailable()) {
                     // ouverture d'un thread
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            getRestaurants(restaurants, adapter, (page+1));
-                            Log.i("page", ""+(page+1));
+                            getRestaurants(restaurants, adapter, (page + 1));
+                            Log.i("page", "" + (page + 1));
                         }
                     }).start();
+                } else {
+                    Toast.makeText(getApplicationContext(), NO_CO_TEXT, Toast.LENGTH_LONG).show();
                 }
-            };
-            rv.addOnScrollListener(scrollListener);
+            }
+        };
+        rv.addOnScrollListener(scrollListener);
+
+        // on verifie si il y a une connexion internet
+        if (isNetworkAvailable()) {
             getRestaurants(restaurants, adapter, 1);
         } else {
-            Toast.makeText(getApplicationContext(), "Pas de connexion internet !", Toast.LENGTH_LONG).show();
-            /*Intent intent = new Intent(main.this, no_connection.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);*/
+            Toast.makeText(getApplicationContext(), NO_CO_TEXT, Toast.LENGTH_LONG).show();
         }
+
+        mSwipeRefreshLayout.setOnRefreshListener(
+            new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    Log.i("dd", "onRefresh called from SwipeRefreshLayout");
+                    if (isNetworkAvailable()) {
+                        restaurants.clear();
+                        scrollListener.resetState();
+                        getRestaurants(restaurants, adapter, 1);
+                    } else {
+                        if (mSwipeRefreshLayout.isRefreshing()) {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
+                        Toast.makeText(getApplicationContext(), NO_CO_TEXT, Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        );
 
     }
 
@@ -83,7 +113,7 @@ public class ListCardActivity extends AppCompatActivity {
 
         // recupération des restos via l'url - Nous utilisons Volley pour les requêtes !!
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = "http://api.gregoirejoncour.xyz/restaurants/"+page+"?key=da39a3ee5e6b4b0d3255bfef95601890afd80709";
+        String url = "http://api.gregoirejoncour.xyz/restaurants/" + page + "?key=da39a3ee5e6b4b0d3255bfef95601890afd80709";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -129,7 +159,10 @@ public class ListCardActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
             }
-        } );
+        });
         requestQueue.add(jsonObjectRequest);
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 }
