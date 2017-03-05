@@ -39,6 +39,28 @@ public class ListCardActivity extends AppCompatActivity {
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3);
 
+        /*String FILENAME = "hello_file";
+        String string = "hello world!";*/
+
+
+        /*try(FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE)){
+            fos.write(string.getBytes());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        /*try (FileInputStream fis = openFileInput(FILENAME)) {
+            System.out.println("Total file size to read (in bytes) : "+ fis.available());
+            int content;
+            while ((content = fis.read()) != -1) {
+                // convert to char and display it
+                System.out.print((char) content);
+            }
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
         // view formant la liste de cards
         final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setHasFixedSize(true);
@@ -87,13 +109,11 @@ public class ListCardActivity extends AppCompatActivity {
                 public void onRefresh() {
                     Log.i("dd", "onRefresh called from SwipeRefreshLayout");
                     if (isNetworkAvailable()) {
-                        restaurants.clear();
                         scrollListener.resetState();
+                        rv.swapAdapter(adapter,false);
                         getRestaurants(restaurants, adapter, 1);
                     } else {
-                        if (mSwipeRefreshLayout.isRefreshing()) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
+                        mSwipeRefreshLayout.setRefreshing(false);
                         Toast.makeText(getApplicationContext(), NO_CO_TEXT, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -110,7 +130,7 @@ public class ListCardActivity extends AppCompatActivity {
     }
 
     private void getRestaurants(final List<Restaurant> restaurants, final RVAdapter adapter, int page) {
-
+        final List<Restaurant> resto = new ArrayList<>();
         // recupération des restos via l'url - Nous utilisons Volley pour les requêtes !!
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url = "http://api.gregoirejoncour.xyz/restaurants/" + page + "?key=da39a3ee5e6b4b0d3255bfef95601890afd80709";
@@ -134,10 +154,14 @@ public class ListCardActivity extends AppCompatActivity {
 
                             restaurant.img = R.drawable.drole;
                             restaurant.image = restaurantObject.getString("image");
-                            restaurants.add(restaurant);
+                            resto.add(restaurant);
                         }
+                        if (mSwipeRefreshLayout.isRefreshing()) {
+                            restaurants.clear();
+                        }
+                        restaurants.addAll(resto);
                         adapter.notifyDataSetChanged();
-
+                        mSwipeRefreshLayout.setRefreshing(false);
                         //page traitement
                         /*SONObject responsePage = response.getJSONObject("page");
                         if (response.getJSONObject("page").optInt("next", 0)==0) {
@@ -161,8 +185,5 @@ public class ListCardActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(jsonObjectRequest);
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
     }
 }

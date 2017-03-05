@@ -19,6 +19,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
     RVAdapter(List<Restaurant> restaurants){
         this.restaurants = restaurants;
     }
+
+    /*public void swap(List<Restaurant> datas){
+        restaurants.clear();
+        restaurants.addAll(datas);
+        notifyDataSetChanged();
+    }*/
+
     @Override
     public void onBindViewHolder(RestaurantViewHolder holder, int position) {
         Log.i("restaurantLoaderName", restaurants.get(position).name);
