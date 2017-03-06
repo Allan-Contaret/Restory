@@ -42,7 +42,17 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".ListCardActivity"></activity>
+        <activity
+            android:name=".ListCardActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".RestaurantActivity"
+            android:label="@string/title_activity_welcome"
+            android:parentActivityName=".ListCardActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ListCardActivity" />
+        </activity>
     </application>
 
 </manifest>

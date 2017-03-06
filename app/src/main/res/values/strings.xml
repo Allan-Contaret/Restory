@@ -6,4 +6,5 @@
     <string name="title_activity_maps">Carte</string>
     <string name="test">test</string>
     <string name="attr">image</string>
+    <string name="title_activity_restaurant">RestaurantActivity</string>
 </resources>

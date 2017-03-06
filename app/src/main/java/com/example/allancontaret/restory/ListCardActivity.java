@@ -29,6 +29,11 @@ public class ListCardActivity extends AppCompatActivity {
     private EndlessRecyclerViewScrollListener scrollListener;
     SwipeRefreshLayout mSwipeRefreshLayout;
 
+    LinearLayoutManager llm;
+    RecyclerView rv;
+    List<Restaurant> restaurants;
+    RVAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,18 +67,14 @@ public class ListCardActivity extends AppCompatActivity {
         }*/
 
         // view formant la liste de cards
-        final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        rv = (RecyclerView) findViewById(R.id.rv);
         rv.setHasFixedSize(true);
-
-        final LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
-
-        // la liste des restos
-        final List<Restaurant> restaurants;
         restaurants = new ArrayList<>();
 
         // le rvadapoter reliant la vu à la liste des restos
-        final RVAdapter adapter = new RVAdapter(restaurants);
+        adapter = new RVAdapter(restaurants);
         rv.setAdapter(adapter);
 
         /**** Scroll infini avec pages ******/
@@ -148,6 +149,8 @@ public class ListCardActivity extends AppCompatActivity {
 
                             Restaurant restaurant = new Restaurant();
                             restaurant.name = restaurantObject.getString("name");
+                            restaurant.id = restaurantObject.getInt("id");
+                            restaurant.description = restaurantObject.getString("description");
                             if (!location.isNull("address")) {
                                 restaurant.address = location.getString("address") + " - " + location.getString("city").toUpperCase() + " - " + location.getInt("postal_code");
                             }
