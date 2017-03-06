@@ -1,6 +1,7 @@
 package com.example.allancontaret.restory;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -9,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,39 +49,46 @@ public class MyLocationActivity extends AppCompatActivity
     double latitude;
     double longitude;
 
+    Restaurant restaurant;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        Intent intent = getIntent();
+        if (intent.hasExtra("ToMap")) {
+            restaurant = (Restaurant) intent.getSerializableExtra("ToMap");
+            setTitle(restaurant.name);
+            SupportMapFragment mapFragment =
+                    (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
 
-        Geocoder geocoder = new Geocoder(getApplicationContext());
-        List<Address> addresses = null;
-        try {
-            addresses = geocoder.getFromLocationName("27 rue de fontarabie, paris, 75020", 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(addresses.size() > 0) {
-            latitude= addresses.get(0).getLatitude();
-            longitude= addresses.get(0).getLongitude();
-            Log.i("lat", String.valueOf(latitude));
+            Geocoder geocoder = new Geocoder(getApplicationContext());
+            List<Address> addresses = null;
+            try {
+                addresses = geocoder.getFromLocationName(restaurant.address, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (addresses.size() > 0) {
+                latitude = addresses.get(0).getLatitude();
+                longitude = addresses.get(0).getLongitude();
+            }
         }
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
+        LatLng restoLocation = new LatLng(latitude, longitude);
 
         mMap.setOnMyLocationButtonClickListener(this);
         enableMyLocation();
 
-        LatLng sydney = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.addMarker(new MarkerOptions().position(restoLocation).title(restaurant.name));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(restoLocation));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(restoLocation, 15.0f));
     }
 
     /**

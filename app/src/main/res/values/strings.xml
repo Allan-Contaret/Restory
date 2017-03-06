@@ -16,4 +16,6 @@
     <string name="show_favorites">Favoris</string>
     <string name="title_activity_restaurant">RestaurantActivity</string>
     <string name="background_image">background_image</string>
+    <string name="text_button_favoris">Ajouter aux favoris</string>
+    <string name="text_button_map">Carte</string>
 </resources>
