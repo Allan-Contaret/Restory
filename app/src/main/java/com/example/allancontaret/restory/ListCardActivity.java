@@ -4,11 +4,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -148,6 +150,8 @@ public class ListCardActivity extends AppCompatActivity {
 
                             Restaurant restaurant = new Restaurant();
                             restaurant.name = restaurantObject.getString("name");
+                            restaurant.id = restaurantObject.getInt("id");
+                            restaurant.description = restaurantObject.getString("description");
                             if (!location.isNull("address")) {
                                 restaurant.address = location.getString("address") + " - " + location.getString("city").toUpperCase() + " - " + location.getInt("postal_code");
                             }
@@ -185,5 +189,32 @@ public class ListCardActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(jsonObjectRequest);
+    }
+
+
+
+    public static int LONG_PRESS_TIME = 500; // Time in miliseconds
+
+    final Handler _handler = new Handler();
+    Runnable _longPressed = new Runnable() {
+        public void run() {
+            Log.i("info","LongPress");
+        }
+    };
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch(event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                _handler.postDelayed(_longPressed, LONG_PRESS_TIME);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                _handler.removeCallbacks(_longPressed);
+                break;
+            case MotionEvent.ACTION_UP:
+                _handler.removeCallbacks(_longPressed);
+                break;
+        }
+        return true;
     }
 }

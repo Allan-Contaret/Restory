@@ -1,18 +1,22 @@
 <resources>
 
-
-
-    <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-
-    </style>
-
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
         <item name="colorPrimary">@android:color/holo_orange_light</item>
         <item name="android:statusBarColor">@android:color/holo_orange_dark</item>
     </style>
 
-    <style name="MyMaterialTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
-        
+    <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@android:color/holo_orange_light</item>
+        <item name="android:statusBarColor">@android:color/holo_orange_dark</item>
     </style>
+
+    <style name="MyMaterialTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@android:color/holo_orange_light</item>
+        <item name="android:statusBarColor">@android:color/holo_orange_dark</item>
+    </style>
+
+    <style name="MyMaterialTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="MyMaterialTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
