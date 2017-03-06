@@ -15,7 +15,6 @@ public class RestaurantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
-        getSupportActionBar().setElevation(0);
 
         Intent intent = getIntent();
         if (intent.hasExtra("MyClass"))
