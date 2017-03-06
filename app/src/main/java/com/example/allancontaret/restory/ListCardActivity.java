@@ -129,6 +129,7 @@ public class ListCardActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_principale, menu);
         return true;
+    }
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
