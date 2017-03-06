@@ -66,6 +66,18 @@
                     android:textAllCaps="false" />
             </android.support.v7.widget.CardView>
 
+            <Button
+            android:text="@string/text_button_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonMap" />
+
+            <Button
+                android:text="@string/text_button_favoris"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonFavoris" />
+
         </LinearLayout>
     </ScrollView>
 
