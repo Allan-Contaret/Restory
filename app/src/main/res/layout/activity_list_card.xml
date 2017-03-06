@@ -12,15 +12,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.allancontaret.restory.ListCardActivity" >-->
 
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swiperefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <!-- A RecyclerView with some commonly used attributes -->
-<android.support.v7.widget.RecyclerView android:id="@+id/rv"
-    android:scrollbars="none"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="5dp"
-    android:clipToPadding="false"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/mycolor" />
+    <android.support.v7.widget.RecyclerView android:id="@+id/rv"
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:clipToPadding="false"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@drawable/app_background" />
 
+
+</android.support.v4.widget.SwipeRefreshLayout>
 <!--</RelativeLayout>-->

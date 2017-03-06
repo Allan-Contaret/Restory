@@ -1,5 +1,7 @@
 package com.example.allancontaret.restory;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,11 +21,19 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
     RVAdapter(List<Restaurant> restaurants){
         this.restaurants = restaurants;
     }
+
+    /*public void swap(List<Restaurant> datas){
+        restaurants.clear();
+        restaurants.addAll(datas);
+        notifyDataSetChanged();
+    }*/
+
     @Override
     public void onBindViewHolder(RestaurantViewHolder holder, int position) {
-        Log.i("restaurantLoaderName", restaurants.get(position).name);
+        Log.i("restaurantLoader", String.valueOf(restaurants.get(position)));
         //holder.restaurantPhoto.setImageResource(restaurants.get(position).img);
         holder.restaurantName.setText(restaurants.get(position).name);
+        holder.resto = restaurants.get(position);
         //restaurantPhoto should be ImageView or your CustomImageView
         // vive Glide !!!
         Glide.with(holder.restaurantPhoto.getContext())
@@ -50,16 +60,28 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
     }
 
     static class RestaurantViewHolder extends RecyclerView.ViewHolder {
-
+        private final Context context;
         CardView cv;
         TextView restaurantName;
         ImageView restaurantPhoto;
+        Restaurant resto;
+        static final String RESTO = "com.example.allancontaret.restory.list_card_activity.RESTO";
 
         RestaurantViewHolder(View itemView) {
             super(itemView);
+            context = itemView.getContext();
             cv = (CardView)itemView.findViewById(R.id.cv);
             restaurantName = (TextView)itemView.findViewById(R.id.restaurant_name);
             restaurantPhoto = (ImageView)itemView.findViewById(R.id.restaurant_photo);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    Log.i("ff", String.valueOf(resto));
+                    final Intent intent =  new Intent(context, RestaurantActivity.class);
+                    intent.putExtra("MyClass", resto);
+                    context.startActivity(intent);
+                }
+            });
         }
 
     }
