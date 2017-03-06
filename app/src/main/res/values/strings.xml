@@ -6,5 +6,13 @@
     <string name="title_activity_maps">Carte</string>
     <string name="test">test</string>
     <string name="attr">image</string>
+    <string name="provider_new_status">Le fournisseur %1$s a maintenant un nouveau status %2$s</string>
+    <string name="provider_disabled">Le fournisseur %s est maintenant désactivé</string>
+    <string name="provider_enabled">Le fournisseur %s est maintenant activé</string>
+    <string name="new_location">Nouvelle localisation : Latitude = %1$s, Longitude = %2$s, Altitude = %3$s avec une précision de %4$s mètres </string>
+    <string name="location_permission_denied">L\'accès à votre position est désactivée</string>
+    <string name="permission_required_toast">Veuillez autoriser l\'accès à votre position</string>
+    <string name="permission_rationale_location">Permission autorisée</string>
+    <string name="show_favorites">Favoris</string>
     <string name="title_activity_restaurant">RestaurantActivity</string>
 </resources>
