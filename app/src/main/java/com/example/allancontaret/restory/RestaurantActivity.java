@@ -1,35 +1,37 @@
 package com.example.allancontaret.restory;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class RestaurantActivity extends AppCompatActivity {
+import com.bumptech.glide.Glide;
 
+public class RestaurantActivity extends AppCompatActivity {
+    Restaurant restaurant;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resto);
+        setContentView(R.layout.activity_restaurant);
 
         Intent intent = getIntent();
         if (intent.hasExtra("MyClass"))
         {
-            final Restaurant myExtra= (Restaurant) intent.getSerializableExtra("MyClass");
-            Log.i("intent", String.valueOf(myExtra.name));
+            restaurant  = (Restaurant) intent.getSerializableExtra("MyClass");
+            Log.i("intent", String.valueOf(restaurant.name));
 
-            //textView
-            TextView textView = new TextView(this);
-            textView.setTextSize(40);
-            textView.setText(myExtra.description);
+            TextView textRestoName = (TextView) findViewById(R.id.textRestoName);
+            textRestoName.setText(restaurant.name);
 
-            setContentView(R.layout.activity_resto);
+            TextView textRestoDescription = (TextView) findViewById(R.id.textRestoDescription);
+            textRestoDescription.setText(restaurant.description);
 
-            RelativeLayout layout = (RelativeLayout) findViewById(R.id.activity_resto);
-
-            layout.addView(textView,0);
+            Glide.with(getApplicationContext())
+                    .load("http://api.gregoirejoncour.xyz/images/"+restaurant.image)
+                    .fitCenter()
+                    .into((ImageView) findViewById(R.id.imageViewRestaurant));
         }
     }
 }

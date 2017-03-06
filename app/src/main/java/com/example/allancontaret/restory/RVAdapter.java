@@ -31,7 +31,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
     @Override
     public void onBindViewHolder(RestaurantViewHolder holder, int position) {
         Log.i("restaurantLoader", String.valueOf(restaurants.get(position)));
-        //holder.restaurantPhoto.setImageResource(restaurants.get(position).img);
         holder.restaurantName.setText(restaurants.get(position).name);
         holder.resto = restaurants.get(position);
         //restaurantPhoto should be ImageView or your CustomImageView
@@ -65,7 +64,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
         TextView restaurantName;
         ImageView restaurantPhoto;
         Restaurant resto;
-        static final String RESTO = "com.example.allancontaret.restory.list_card_activity.RESTO";
 
         RestaurantViewHolder(View itemView) {
             super(itemView);
@@ -76,7 +74,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
-                    Log.i("ff", String.valueOf(resto));
                     final Intent intent =  new Intent(context, RestaurantActivity.class);
                     intent.putExtra("MyClass", resto);
                     context.startActivity(intent);
