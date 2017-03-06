@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -60,6 +61,12 @@ public class ListCardActivity extends AppCompatActivity {
         getRestaurants(restaurants, adapter, 1);
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_principale, menu);
+        return true;
     }
 
     private void getRestaurants(final List<Restaurant> restaurants, final RVAdapter adapter, int page) {
