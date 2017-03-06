@@ -4,13 +4,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -30,6 +28,11 @@ public class ListCardActivity extends AppCompatActivity {
     public static final String NO_CO_TEXT = "Pas de connexion internet !";
     private EndlessRecyclerViewScrollListener scrollListener;
     SwipeRefreshLayout mSwipeRefreshLayout;
+
+    LinearLayoutManager llm;
+    RecyclerView rv;
+    List<Restaurant> restaurants;
+    RVAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,18 +67,14 @@ public class ListCardActivity extends AppCompatActivity {
         }*/
 
         // view formant la liste de cards
-        final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        rv = (RecyclerView) findViewById(R.id.rv);
         rv.setHasFixedSize(true);
-
-        final LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
-
-        // la liste des restos
-        final List<Restaurant> restaurants;
         restaurants = new ArrayList<>();
 
         // le rvadapoter reliant la vu à la liste des restos
-        final RVAdapter adapter = new RVAdapter(restaurants);
+        adapter = new RVAdapter(restaurants);
         rv.setAdapter(adapter);
 
         /**** Scroll infini avec pages ******/
@@ -189,32 +188,5 @@ public class ListCardActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(jsonObjectRequest);
-    }
-
-
-
-    public static int LONG_PRESS_TIME = 500; // Time in miliseconds
-
-    final Handler _handler = new Handler();
-    Runnable _longPressed = new Runnable() {
-        public void run() {
-            Log.i("info","LongPress");
-        }
-    };
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch(event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                _handler.postDelayed(_longPressed, LONG_PRESS_TIME);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                _handler.removeCallbacks(_longPressed);
-                break;
-            case MotionEvent.ACTION_UP:
-                _handler.removeCallbacks(_longPressed);
-                break;
-        }
-        return true;
     }
 }
