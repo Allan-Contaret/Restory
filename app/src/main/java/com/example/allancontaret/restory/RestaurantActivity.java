@@ -7,7 +7,7 @@ import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class RestoActivity extends AppCompatActivity {
+public class RestaurantActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

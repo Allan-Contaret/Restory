@@ -46,7 +46,7 @@
             android:name=".ListCardActivity"
             android:configChanges="orientation|screenSize"/>
         <activity
-            android:name=".RestoActivity"
+            android:name=".RestaurantActivity"
             android:label="@string/title_activity_welcome"
             android:parentActivityName=".ListCardActivity" >
             <meta-data
