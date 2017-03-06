@@ -15,13 +15,14 @@ public class RestaurantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
+        getSupportActionBar().setElevation(0);
 
         Intent intent = getIntent();
         if (intent.hasExtra("MyClass"))
         {
             restaurant  = (Restaurant) intent.getSerializableExtra("MyClass");
             Log.i("intent", String.valueOf(restaurant.name));
-
+            setTitle(restaurant.name);
             TextView textRestoName = (TextView) findViewById(R.id.textRestoName);
             textRestoName.setText(restaurant.name);
 
