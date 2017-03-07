@@ -37,6 +37,9 @@ public class RestaurantActivity extends AppCompatActivity {
             TextView textRestoDescription = (TextView) findViewById(R.id.textRestoDescription);
             textRestoDescription.setText(restaurant.description);
 
+            TextView textRestoAddress = (TextView) findViewById(R.id.textRestoAddress);
+            textRestoAddress.setText(restaurant.address);
+
             Glide.with(getApplicationContext())
                     .load("http://api.gregoirejoncour.xyz/images/"+restaurant.image)
                     .fitCenter()
