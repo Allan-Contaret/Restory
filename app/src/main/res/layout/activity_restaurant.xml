@@ -9,12 +9,12 @@
     tools:context="com.example.allancontaret.restory.RestaurantActivity">
 
     <ImageView
+        android:id="@+id/imageViewRestaurant"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/restaurant"
-        android:id="@+id/imageViewRestaurant"
         android:contentDescription="@string/background_image"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/restaurant" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -26,9 +26,9 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
+                android:id="@+id/card_resto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/card_resto"
                 android:layout_margin="10dp"
                 app:cardElevation="5dp"
                 app:contentPadding="5dp">
@@ -49,33 +49,75 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="10dp"
                 android:minHeight="200dp"
+                app:cardElevation="5dp"
+                app:contentPadding="5dp">
+
+                <TextView
+                    android:id="@+id/textRestoDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="casual"
+                    android:padding="3dp"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="?android:attr/textColorLink"
+                    android:textStyle="normal|bold" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 app:cardElevation="5dp"
                 app:contentPadding="5dp">
 
                 <TextView
+                    android:id="@+id/textRestoAddress"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/textRestoDescription"
+                    android:fontFamily="casual"
                     android:padding="3dp"
                     android:textAlignment="viewStart"
-                    android:textColor="?android:attr/textColorLink"
-                    android:fontFamily="casual"
-                    android:textStyle="normal|bold"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/holo_red_light"
+                    android:textStyle="normal|bold" />
             </android.support.v7.widget.CardView>
 
-            <Button
-            android:text="@string/text_button_map"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttonMap" />
-
-            <Button
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/buttonFavoris" />
+                android:layout_margin="10dp"
+                app:cardElevation="5dp"
+                app:contentPadding="5dp"
+                android:gravity="bottom">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <Button
+                        android:id="@+id/buttonMap"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:elevation="3dp"
+                        android:text="@string/text_button_map" />
+
+                    <Button
+                        android:id="@+id/buttonFavoris"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/buttonMap"
+                        android:elevation="3dp" />
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
 
         </LinearLayout>
     </ScrollView>
