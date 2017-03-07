@@ -1,6 +1,7 @@
 package com.example.allancontaret.restory;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -10,8 +11,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
-
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListCardActivity extends AppCompatActivity {
-    public static final String NO_CO_TEXT = "Pas de connexion internet !";
+
     private EndlessRecyclerViewScrollListener scrollListener;
     SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -45,28 +46,6 @@ public class ListCardActivity extends AppCompatActivity {
                 R.color.refresh_progress_1,
                 R.color.refresh_progress_2,
                 R.color.refresh_progress_3);
-
-        /*String FILENAME = "hello_file";
-        String string = "hello world!";*/
-
-
-        /*try(FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE)){
-            fos.write(string.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        /*try (FileInputStream fis = openFileInput(FILENAME)) {
-            System.out.println("Total file size to read (in bytes) : "+ fis.available());
-            int content;
-            while ((content = fis.read()) != -1) {
-                // convert to char and display it
-                System.out.print((char) content);
-            }
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
 
         // view formant la liste de cards
         rv = (RecyclerView) findViewById(R.id.rv);
@@ -93,7 +72,7 @@ public class ListCardActivity extends AppCompatActivity {
                         }
                     }).start();
                 } else {
-                    Toast.makeText(getApplicationContext(), NO_CO_TEXT, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.noInternet), Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -103,7 +82,7 @@ public class ListCardActivity extends AppCompatActivity {
         if (isNetworkAvailable()) {
             getRestaurants(restaurants, adapter, 1);
         } else {
-            Toast.makeText(getApplicationContext(), NO_CO_TEXT, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.noInternet), Toast.LENGTH_LONG).show();
         }
 
         mSwipeRefreshLayout.setOnRefreshListener(
@@ -117,7 +96,7 @@ public class ListCardActivity extends AppCompatActivity {
                         getRestaurants(restaurants, adapter, 1);
                     } else {
                         mSwipeRefreshLayout.setRefreshing(false);
-                        Toast.makeText(getApplicationContext(), NO_CO_TEXT, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.noInternet), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -129,6 +108,21 @@ public class ListCardActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_principale, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.favorites) {
+            Intent favoritesIntent = new Intent(ListCardActivity.this, FavoritesActivity.class);
+            startActivity(favoritesIntent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean isNetworkAvailable() {
