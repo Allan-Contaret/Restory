@@ -1,15 +1,19 @@
 package com.example.allancontaret.restory;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,27 +58,38 @@ public class MyLocationActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        if (isNetworkAvailable()) {
+            Intent intent = getIntent();
+            if (intent.hasExtra("ToMap")) {
+                restaurant = (Restaurant) intent.getSerializableExtra("ToMap");
+                setTitle(restaurant.name);
+                SupportMapFragment mapFragment =
+                        (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                mapFragment.getMapAsync(this);
 
-        Intent intent = getIntent();
-        if (intent.hasExtra("ToMap")) {
-            restaurant = (Restaurant) intent.getSerializableExtra("ToMap");
-            setTitle(restaurant.name);
-            SupportMapFragment mapFragment =
-                    (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-
-            Geocoder geocoder = new Geocoder(getApplicationContext());
-            List<Address> addresses = null;
-            try {
-                addresses = geocoder.getFromLocationName(restaurant.address, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
+                Geocoder geocoder = new Geocoder(getApplicationContext());
+                List<Address> addresses = null;
+                try {
+                    addresses = geocoder.getFromLocationName(restaurant.address, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (addresses.size() > 0) {
+                    latitude = addresses.get(0).getLatitude();
+                    longitude = addresses.get(0).getLongitude();
+                }
             }
-            if (addresses.size() > 0) {
-                latitude = addresses.get(0).getLatitude();
-                longitude = addresses.get(0).getLongitude();
-            }
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.noInternet), Toast.LENGTH_LONG).show();
         }
+
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override

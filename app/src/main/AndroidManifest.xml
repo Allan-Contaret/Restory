@@ -57,7 +57,6 @@
             android:launchMode="singleTop" />
         <activity
             android:name=".RestaurantActivity"
-            android:label="@string/title_activity_welcome"
             android:parentActivityName=".ListCardActivity"
             android:launchMode="singleTop">
             <meta-data
