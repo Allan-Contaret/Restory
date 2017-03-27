@@ -1,23 +1,22 @@
 package com.example.allancontaret.restory;
 
-import android.content.Intent;
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +31,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 public class RestaurantTabActivity extends AppCompatActivity {
@@ -122,14 +120,56 @@ public class RestaurantTabActivity extends AppCompatActivity {
         }
     }
 
+    public static class MapViewFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback {
 
-    public static class MapViewFragment extends Fragment {
         double latitude;
         double longitude;
         Restaurant restaurant;
         MapView mMapView;
-        private GoogleMap googleMap;
+        private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+        private static GoogleMap googleMap;
 
+        @Override
+        public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+            switch (requestCode) {
+                case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                    if (/*grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED*/PermissionUtils.isPermissionGranted(permissions, grantResults,
+                            Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        Log.i("permission", "OK");
+                        enableMyLocation();
+                    } else {
+                        Log.i("permission", "not OK");
+                    }
+                }
+            }
+        }
+
+        /**
+         * Enables the My Location layer if the fine location permission has been granted.
+         */
+        private void enableMyLocation() {
+            // For showing a move to my location button
+            if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+/*                PermissionUtils.requestPermission((AppCompatActivity) getActivity(), MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION, true);*/
+            } else {
+                Log.i("permission", "permission ok");
+                googleMap.setMyLocationEnabled(true);
+            }
+        }
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser) {
+            super.setUserVisibleHint(isVisibleToUser);
+
+            if (isVisibleToUser) {
+                enableMyLocation();
+                Log.d("MyFragment", "Fragment is visible.");
+            }
+            else Log.d("MyFragment", "Fragment is not visible.");
+        }
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.location_fragment, container, false);
@@ -160,26 +200,11 @@ public class RestaurantTabActivity extends AppCompatActivity {
                 @Override
                 public void onMapReady(GoogleMap mMap) {
                     googleMap = mMap;
-
-                    // For showing a move to my location button
-                    if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    googleMap.setMyLocationEnabled(true);
-
                     // For dropping a marker at a point on the Map
                     LatLng sydney = new LatLng(latitude, longitude);
-                    googleMap.addMarker(new MarkerOptions().position(sydney).title(restaurant.name).snippet("Marker Description"));
-
+                    googleMap.addMarker(new MarkerOptions().position(sydney).title(restaurant.name).snippet(restaurant.address));
                     // For zooming automatically to the location of the marker
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(17).build();
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(18).build();
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             });
