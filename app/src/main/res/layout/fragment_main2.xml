@@ -1,0 +1,109 @@
+<!--
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.allancontaret.restory.Main2Activity$PlaceholderFragment">
+
+    <TextView
+        android:id="@+id/section_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_restaurant"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_background"
+    tools:context="com.example.allancontaret.restory.RestaurantActivity">
+
+    <ImageView
+        android:id="@+id/imageViewRestaurant"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/background_image"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/restaurant" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_resto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                app:cardElevation="5dp"
+                app:contentPadding="5dp">
+
+                <TextView
+                    android:id="@+id/textRestoName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="cursive"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/refresh_progress_1"
+                    android:textSize="30sp"
+                    android:textStyle="normal|bold" />
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:minHeight="200dp"
+                app:cardElevation="5dp"
+                app:contentPadding="5dp">
+
+                <TextView
+                    android:id="@+id/textRestoDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="casual"
+                    android:padding="3dp"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="?android:attr/textColorLink"
+                    android:textStyle="normal|bold" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardElevation="5dp"
+                app:contentPadding="5dp">
+
+                <TextView
+                    android:id="@+id/textRestoAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="casual"
+                    android:padding="3dp"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/holo_red_light"
+                    android:textStyle="normal|bold" />
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

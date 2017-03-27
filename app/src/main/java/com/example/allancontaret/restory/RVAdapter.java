@@ -74,7 +74,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RestaurantViewHold
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
-                    final Intent intent =  new Intent(context, RestaurantActivity.class);
+                    final Intent intent =  new Intent(context, RestaurantTabActivity.class);
                     intent.putExtra("MyClass", resto);
                     context.startActivity(intent);
                 }

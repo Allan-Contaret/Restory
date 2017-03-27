@@ -18,13 +18,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme">
+        android:theme="@style/MyAppcompat">
         <activity
             android:name=".WelcomeActivity"
-            android:theme="@style/MyMaterialTheme.NoActionBar">
+            android:theme="@style/MyAppcompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -42,8 +41,7 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-        </activity>
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".MyLocationActivity"
             android:parentActivityName=".RestaurantActivity">
@@ -57,8 +55,8 @@
             android:launchMode="singleTop" />
         <activity
             android:name=".RestaurantActivity"
-            android:parentActivityName=".ListCardActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:parentActivityName=".ListCardActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ListCardActivity" />
@@ -66,6 +64,17 @@
         <activity
             android:name=".FavoritesActivity"
             android:parentActivityName=".ListCardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ListCardActivity" />
+        </activity>
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main2" />
+        <activity
+            android:name=".RestaurantTabActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ListCardActivity" />

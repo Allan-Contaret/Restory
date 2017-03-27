@@ -1,22 +1,20 @@
 <resources>
 
-    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+    <style name="MyAppcompat" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@android:color/holo_orange_light</item>
-        <item name="android:statusBarColor">@android:color/holo_orange_dark</item>
+        <item name="colorPrimaryDark">@android:color/holo_orange_dark</item>
+        <item name="android:navigationBarColor">@android:color/holo_orange_dark</item>
+        <item name="android:textColorPrimary">@android:color/primary_text_light</item>
+        <item name="colorAccent">@android:color/holo_red_dark</item>
     </style>
 
-    <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@android:color/holo_orange_light</item>
-        <item name="android:statusBarColor">@android:color/holo_orange_dark</item>
+    <style name="MyAppcompat.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="MyMaterialTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@android:color/holo_orange_light</item>
-        <item name="android:statusBarColor">@android:color/holo_orange_dark</item>
-    </style>
+    <style name="MyAppcompat.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="MyMaterialTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="MyMaterialTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="MyAppcompat.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
