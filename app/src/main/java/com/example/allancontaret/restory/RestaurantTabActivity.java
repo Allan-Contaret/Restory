@@ -26,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -200,6 +201,17 @@ public class RestaurantTabActivity extends AppCompatActivity {
                 @Override
                 public void onMapReady(GoogleMap mMap) {
                     googleMap = mMap;
+                    googleMap.getUiSettings().setZoomControlsEnabled(true);
+                    googleMap.getUiSettings().setCompassEnabled(true);
+                    googleMap.getUiSettings().setMapToolbarEnabled(true);
+                    googleMap.getUiSettings().setZoomGesturesEnabled(true);
+                    googleMap.getUiSettings().setScrollGesturesEnabled(true);
+                    googleMap.getUiSettings().setTiltGesturesEnabled(true);
+                    googleMap.getUiSettings().setRotateGesturesEnabled(true);
+                    //googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                    //googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    //googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    //googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                     // For dropping a marker at a point on the Map
                     LatLng sydney = new LatLng(latitude, longitude);
                     googleMap.addMarker(new MarkerOptions().position(sydney).title(restaurant.name).snippet(restaurant.address));
