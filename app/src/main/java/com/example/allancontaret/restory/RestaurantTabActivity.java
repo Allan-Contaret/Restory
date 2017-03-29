@@ -1,6 +1,7 @@
 package com.example.allancontaret.restory;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,11 +13,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,7 +29,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -65,6 +67,29 @@ public class RestaurantTabActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.getCurrentItem();
+        mViewPager.addOnPageChangeListener(
+                new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                        //Called when the scroll state changes.
+                    }
+
+                    @Override
+                    public void onPageScrolled(int position,
+                                               float positionOffset, int positionOffsetPixels) {
+                        //This method will be invoked when the current page is scrolled,
+                        //either as part of a programmatically initiated smooth scroll
+                        //or a user initiated touch scroll.
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        //This method will be invoked when a new page becomes selected.
+                        Log.i("dddfgdfgdgf", String.valueOf(position));
+                    }
+                }
+        );
 
         mTabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -129,6 +154,7 @@ public class RestaurantTabActivity extends AppCompatActivity {
         MapView mMapView;
         private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
         private static GoogleMap googleMap;
+        LatLng locationRestaurant;
 
         @Override
         public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -161,16 +187,22 @@ public class RestaurantTabActivity extends AppCompatActivity {
                 googleMap.setMyLocationEnabled(true);
             }
         }
+
         @Override
         public void setUserVisibleHint(boolean isVisibleToUser) {
             super.setUserVisibleHint(isVisibleToUser);
 
             if (isVisibleToUser) {
                 enableMyLocation();
-                Log.d("MyFragment", "Fragment is visible.");
-            }
-            else Log.d("MyFragment", "Fragment is not visible.");
+                resetCameraRestaurantLocation();
+            } else Log.d("MyFragment", "Fragment is not visible.");
         }
+
+        private void resetCameraRestaurantLocation() {
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(locationRestaurant).zoom(18).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.location_fragment, container, false);
@@ -187,20 +219,67 @@ public class RestaurantTabActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (addresses.size() > 0) {
-                latitude = addresses.get(0).getLatitude();
-                longitude = addresses.get(0).getLongitude();
-            }
             try {
                 MapsInitializer.initialize(getActivity().getApplicationContext());
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            if (addresses != null) {
+                latitude = addresses.get(0).getLatitude();
+                longitude = addresses.get(0).getLongitude();
+            }
+            locationRestaurant = new LatLng(latitude, longitude);
+            // image button select type map
+            ImageButton map = (ImageButton) rootView.findViewById(R.id.buttonMapType);
+            map.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(R.string.dialog_map_type_title)
+                            .setSingleChoiceItems(
+                                    new String[]{"Normal", "Satellite", "Terrain", "Hybrid"},
+                                    (googleMap.getMapType() - 1),
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int item) {
+                                            switch (item) {
+                                                case 0:
+                                                    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                                                    break;
+                                                case 1:
+                                                    googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                                                    break;
+                                                case 2:
+                                                    googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                                                    break;
+                                                case 3:
+                                                    googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                                                    break;
+                                                default:
+                                                    googleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+                                            }
+                                            dialog.dismiss();
+                                        }
+                                    }
+                            )
+                            .show();
+                }
+            });
+            ImageButton marker = (ImageButton) rootView.findViewById(R.id.buttonGoToMarker);
+            marker.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    resetCameraRestaurantLocation();
+                }
+            });
 
             mMapView.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap mMap) {
                     googleMap = mMap;
+
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(46.227638, 2.213749)).zoom(5).build();
+                    googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
                     googleMap.getUiSettings().setZoomControlsEnabled(true);
                     googleMap.getUiSettings().setCompassEnabled(true);
                     googleMap.getUiSettings().setMapToolbarEnabled(true);
@@ -208,16 +287,8 @@ public class RestaurantTabActivity extends AppCompatActivity {
                     googleMap.getUiSettings().setScrollGesturesEnabled(true);
                     googleMap.getUiSettings().setTiltGesturesEnabled(true);
                     googleMap.getUiSettings().setRotateGesturesEnabled(true);
-                    //googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                    //googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                    //googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                    //googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                     // For dropping a marker at a point on the Map
-                    LatLng sydney = new LatLng(latitude, longitude);
-                    googleMap.addMarker(new MarkerOptions().position(sydney).title(restaurant.name).snippet(restaurant.address));
-                    // For zooming automatically to the location of the marker
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(18).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    googleMap.addMarker(new MarkerOptions().position(locationRestaurant).title(restaurant.name).snippet(restaurant.address));
                 }
             });
 
@@ -264,7 +335,7 @@ public class RestaurantTabActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            if (position == 1){
+            if (position == 1) {
                 return new MapViewFragment();
             } else {
                 return PlaceholderFragment.newInstance(position + 1);
