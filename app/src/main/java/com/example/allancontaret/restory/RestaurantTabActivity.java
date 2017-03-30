@@ -2,10 +2,13 @@ package com.example.allancontaret.restory;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,13 +57,17 @@ public class RestaurantTabActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    SharedPreferences settings;
+    public static final String PREFS_RESTO = "MyPrefsFile";
+    Restaurant restaurant;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         getSupportActionBar().setElevation(4);
-        Restaurant restaurant = (Restaurant) getIntent().getSerializableExtra("MyClass");
+        restaurant = (Restaurant) getIntent().getSerializableExtra("MyClass");
         setTitle(restaurant.name);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -94,6 +102,43 @@ public class RestaurantTabActivity extends AppCompatActivity {
         mTabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         mTabLayout.setupWithViewPager(mViewPager);
 
+        settings = getSharedPreferences(PREFS_RESTO, 0);
+        fab = (FloatingActionButton) findViewById(R.id.buttonFavoriteStar);
+        favoriteButtonText(settings);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionToFavorites(settings, restaurant.name, restaurant.id);
+            }
+        });
+
+    }
+
+    private void favoriteButtonText(SharedPreferences settings) {
+        if (!settings.contains(String.valueOf(restaurant.id))){
+            fab.setImageResource(android.R.drawable.btn_star_big_off);
+        } else {
+            fab.setImageResource(android.R.drawable.btn_star_big_on);
+        }
+    }
+
+    private void actionToFavorites(SharedPreferences settings, String keyName, int restaurantId) {
+        String message;
+        SharedPreferences.Editor editor = settings.edit();
+
+        // verification si favoris existe
+        if (!settings.contains(String.valueOf(restaurantId))){
+            editor.putString(String.valueOf(restaurantId), keyName);
+            message = getString(R.string.toast_add_favorite);
+        } else {
+            editor.remove(String.valueOf(restaurantId));
+            message = getString(R.string.toast_rm_favorite);
+        }
+
+        // Commit the edits!
+        editor.apply();
+        favoriteButtonText(settings);
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     /**
