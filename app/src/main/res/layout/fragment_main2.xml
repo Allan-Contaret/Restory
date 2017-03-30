@@ -34,6 +34,10 @@
         app:srcCompat="@drawable/restaurant" />
 
     <ScrollView
+        android:padding="5dp"
+        android:clipToPadding="false"
+        style="@style/scrollbar_shape_style"
+        android:scrollbarStyle="outsideOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -46,9 +50,10 @@
                 android:id="@+id/card_resto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                app:cardElevation="5dp"
-                app:contentPadding="5dp">
+                android:layout_margin="2.5dp"
+                app:cardElevation="3dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true">
 
                 <TextView
                     android:id="@+id/textRestoName"
@@ -57,6 +62,7 @@
                     android:fontFamily="cursive"
                     android:textAlignment="center"
                     android:textAllCaps="false"
+                    android:layout_margin="6dp"
                     android:textColor="@color/refresh_progress_1"
                     android:textSize="30sp"
                     android:textStyle="normal|bold" />
@@ -66,39 +72,41 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:minHeight="200dp"
-                app:cardElevation="5dp"
-                app:contentPadding="5dp">
-
-                <TextView
-                    android:id="@+id/textRestoDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="casual"
-                    android:padding="3dp"
-                    android:textAlignment="viewStart"
-                    android:textAllCaps="false"
-                    android:textColor="?android:attr/textColorLink"
-                    android:textStyle="normal|bold" />
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardElevation="5dp"
-                app:contentPadding="5dp">
+                android:layout_margin="2.5dp"
+                app:cardElevation="3dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true">
 
                 <TextView
                     android:id="@+id/textRestoAddress"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="casual"
-                    android:padding="3dp"
-                    android:textAlignment="viewStart"
+                    android:layout_margin="6dp"
+                    android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="@android:color/holo_red_light"
+                    android:textStyle="normal|bold" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="200dp"
+                android:layout_margin="2.5dp"
+                app:cardElevation="3dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true">
+
+                <TextView
+                    android:id="@+id/textRestoDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="casual"
+                    android:layout_margin="6dp"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="?android:attr/textColorLink"
                     android:textStyle="normal|bold" />
             </android.support.v7.widget.CardView>
 
