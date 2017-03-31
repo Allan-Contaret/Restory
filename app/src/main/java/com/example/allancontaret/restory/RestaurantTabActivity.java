@@ -193,13 +193,15 @@ public class RestaurantTabActivity extends AppCompatActivity {
 
     public static class MapViewFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback {
 
-        double latitude;
-        double longitude;
+        double latitude = 46.227638;
+        double longitude = 2.213749;
+        float zoom = 5;
         Restaurant restaurant;
         MapView mMapView;
         private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
         private static GoogleMap googleMap;
         LatLng locationRestaurant;
+        List<Address> addresses = null;
 
         @Override
         public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -244,13 +246,13 @@ public class RestaurantTabActivity extends AppCompatActivity {
         }
 
         private void resetCameraRestaurantLocation() {
-            CameraPosition cameraPosition = new CameraPosition.Builder().target(locationRestaurant).zoom(18).build();
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(locationRestaurant).zoom(zoom).build();
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.location_fragment, container, false);
+            final View rootView = inflater.inflate(R.layout.location_fragment, container, false);
 
             mMapView = (MapView) rootView.findViewById(R.id.mapView);
             mMapView.onCreate(savedInstanceState);
@@ -258,7 +260,7 @@ public class RestaurantTabActivity extends AppCompatActivity {
             mMapView.onResume(); // needed to get the map to display immediately
             restaurant = (Restaurant) getActivity().getIntent().getSerializableExtra("MyClass");
             Geocoder geocoder = new Geocoder(getContext());
-            List<Address> addresses = null;
+
             try {
                 addresses = geocoder.getFromLocationName(restaurant.address, 1);
             } catch (IOException e) {
@@ -269,11 +271,9 @@ public class RestaurantTabActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (addresses != null) {
-                latitude = addresses.get(0).getLatitude();
-                longitude = addresses.get(0).getLongitude();
-            }
-            locationRestaurant = new LatLng(latitude, longitude);
+
+
+
             // image button select type map
             ImageButton map = (ImageButton) rootView.findViewById(R.id.buttonMapType);
             map.setOnClickListener(new View.OnClickListener() {
@@ -309,21 +309,34 @@ public class RestaurantTabActivity extends AppCompatActivity {
                             .show();
                 }
             });
-            ImageButton marker = (ImageButton) rootView.findViewById(R.id.buttonGoToMarker);
-            marker.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    resetCameraRestaurantLocation();
-                }
-            });
 
             mMapView.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap mMap) {
                     googleMap = mMap;
 
+                    if (addresses.size() > 0) {
+                        zoom = 18;
+                        latitude = addresses.get(0).getLatitude();
+                        longitude = addresses.get(0).getLongitude();
+                        locationRestaurant = new LatLng(latitude, longitude);
+                        googleMap.addMarker(new MarkerOptions().position(locationRestaurant).title(restaurant.name).snippet(restaurant.address));
+                    } else {
+                        zoom = 5;
+                        locationRestaurant = new LatLng(latitude, longitude);
+                        Toast.makeText(getContext(), "Adresse non trouvée", Toast.LENGTH_SHORT).show();
+                    }
+
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(46.227638, 2.213749)).zoom(5).build();
                     googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                    ImageButton marker = (ImageButton) rootView.findViewById(R.id.buttonGoToMarker);
+                    marker.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            resetCameraRestaurantLocation();
+                        }
+                    });
 
                     googleMap.getUiSettings().setZoomControlsEnabled(true);
                     googleMap.getUiSettings().setCompassEnabled(true);
@@ -332,8 +345,6 @@ public class RestaurantTabActivity extends AppCompatActivity {
                     googleMap.getUiSettings().setScrollGesturesEnabled(true);
                     googleMap.getUiSettings().setTiltGesturesEnabled(true);
                     googleMap.getUiSettings().setRotateGesturesEnabled(true);
-                    // For dropping a marker at a point on the Map
-                    googleMap.addMarker(new MarkerOptions().position(locationRestaurant).title(restaurant.name).snippet(restaurant.address));
                 }
             });
 
